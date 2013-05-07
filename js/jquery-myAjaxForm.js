@@ -87,9 +87,9 @@
         });
     };
     var getFieldType=function(field){
-        var tagName=field.attr("tagName").toLocaleLowerCase();
-        var type=field.attr("type").toLocaleLowerCase();
+        var tagName=field.attr("tagName")?field.attr("tagName").toLocaleLowerCase():field[0].tagName.toLocaleLowerCase();
         if(tagName=="input"){
+            var type=field.attr("type").toLocaleLowerCase();
             return type;
         }
         return tagName;

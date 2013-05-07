@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>首頁</title>
+<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="js/jquery-myAjaxForm.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $("#form_login").myAjaxForm({
+                url:"test.php",
+                success:function(data){
+                    alert(data);
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+<div>
+    <form id="form_login">
+        <h2>登录</h2>
+        <ul class="ul-login">
+            <li>
+                <h3>邮箱 </h3>
+                <input validator="email length[5,12]" err-msg="请用Email，亲这是自定义错误信息|必须{1}到{2}位数，亲。。。。" type="text" name="txt_name" class="input login_input" />
+            </li>
+            <li>
+                <h3>密码 </h3>
+                <input validator="required" type="password" name="txt_pwd" class="input login_input" />
+            </li>
+            <li>
+                <a href="#" title="" class='forget-pwd'>忘记密码</a>
+            </li>
+            <li>
+                <input validator="required" err-msg="勾选吧，骚年" type='checkbox' name="chk_auto" id='chk_auto'/><label for="chk_auto">两周内自动登录</label>
+            </li>
+            <li>
+                <input type="submit" value="submit" />
+            </li>
+        </ul>
+    </form>
+</div>
+
+</body>
+</html>
