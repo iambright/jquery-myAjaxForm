@@ -32,6 +32,7 @@
     var validateField=function(opts){
         var field=$(this);
         var value=getFieldValue.call(field);
+        var errMsgArr=field.attr("err-msg")?field.attr("err-msg").split("|"):null;
         var vs=field.attr(opts.validatorAttrName).split(" ");
         var msg=[];
         for (var i = 0; i < vs.length; i++) {
@@ -40,8 +41,8 @@
             var vrName=vr[0];
             vr[0]=value;
             if(validators[vrName] && !validators[vrName].apply(field,vr)){
-                if(errorMessage[vrName]){
-                    var str=errorMessage[vrName];
+                var str= errMsgArr&&errMsgArr.length>i&&errMsgArr[i]!=""?errMsgArr[i]:errorMessage[vrName];
+                if(str){
                     for (var j = 0; j < vr.length; j++) {
                         var obj1 = vr[j];
                         str=str.replace(new RegExp("\\{"+j+"\\}","ig"),vr[j]);
