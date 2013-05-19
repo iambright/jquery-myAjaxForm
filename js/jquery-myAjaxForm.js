@@ -128,6 +128,10 @@
             var valid=(/^(([\-\w]+)\.?)+@(([\-\w]+)\.?)+\.[a-zA-Z]{2,4}$/).test(val);
             return valid;
         },
+        equal:function(val,id){
+            var valid=val==document.getElementById(id).value;
+            return valid;
+        },
         regexp:function(val,pattern,options){
             var regexp=new RegExp(pattern);
             var valid=regexp.test(val);
@@ -141,6 +145,7 @@
         numeric:"必须是数字",
         min:"必须是小于{1}的数字",
         max:"必须是大于{1}数字",
+        equal:"数据不正确",
         regexp:"数据不正确"
     };
 
