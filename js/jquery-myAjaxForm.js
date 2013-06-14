@@ -4,6 +4,20 @@
 *
 * */
 (function($){
+
+    var fieldAlert=function(field){
+        var field=this;
+        var invoke=0;
+        var interval=setInterval(function(){
+            invoke++;
+            if(invoke==7 || field.length==0){
+                clearInterval(interval);
+            }else{
+                field.parent().toggleClass("alert");
+            }
+        },300);
+    };
+
     var showMsg=function(msg){
         var field=this,msgUI=this.nextAll(".msg");
         if(msgUI.length==0){
@@ -11,8 +25,11 @@
         }
         if(msg.length>0){
             msgUI.removeClass("valid-msg").addClass("err-msg").html(msg.join(","));
+            field.parent().addClass("failed");
+            fieldAlert.call(field.filter(":visible").length>0?field:field.parent());
         }else{
             msgUI.removeClass("err-msg").addClass("valid-msg").html("");
+            field.parent().removeClass("failed");
         }
     };
     var validate=function(opts){
@@ -61,6 +78,7 @@
         var form=this;
         form.submit(function(){
             setTimeout(function(){
+                opts.onBeforeValidate && opts.onBeforeValidate.call(form);
                 if(validate.call(form,opts)){
                     //
                     $.post(opts.url || getApi(opts.api) || form.attr("action"),form.serialize(),function(data){
@@ -108,10 +126,10 @@
     };
     var validators={
         required:function(val){
-            return val==""?false:true;
+            return $.trim(val)==""?false:true;
         },
         numeric: function(val) {
-            return /^\d+$/.test(val);
+            return val==""||/^\d+$/.test(val);
         },
         length:function(val,min,max){
             var length=val.length;
@@ -126,6 +144,14 @@
         },
         email:function(val){
             var valid=(/^(([\-\w]+)\.?)+@(([\-\w]+)\.?)+\.[a-zA-Z]{2,4}$/).test(val);
+            return val==""||valid;
+        },
+        phone:function(val){
+            var valid=(/^13[0-9]{1}[0-9]{8}$|15[012356789]{1}[0-9]{8}$|18[012356789]{1}[0-9]{8}$|14[57]{1}[0-9]$/).test(val);
+            return val==""||valid;
+        },
+        equal:function(val,id){
+            var valid=val==document.getElementById(id).value;
             return valid;
         },
         equal:function(val,id){
@@ -142,6 +168,7 @@
         required:"不能为空",
         length:"长度必须为{1}到{2}",
         email:"邮箱格式不正确",
+        phone:"手机号码不正确",
         numeric:"必须是数字",
         min:"必须是小于{1}的数字",
         max:"必须是大于{1}数字",
@@ -175,7 +202,7 @@
     $.myAjaxForm.api={};
     var methods={
         init:function(params){
-            this.each(function(){
+            return this.each(function(){
                 var opts= $.extend({}, $.myAjaxForm.global,params);
                 initEvent.call($(this).addClass("my-ajax-form"),opts);
             });
